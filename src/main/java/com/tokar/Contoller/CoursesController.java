@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import com.tokar.Entity.Courses;
-import com.tokar.Repository.CursesRepository;
+import com.tokar.Repository.CoursesRepository;
 
 import java.util.Optional;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 @RequestMapping("/courses")
 public class CoursesController {
     @Autowired
-    private CursesRepository CR;
+    private CoursesRepository CR;
 
     @GetMapping
     public Iterable<Courses> GetAll(){

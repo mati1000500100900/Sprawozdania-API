@@ -5,10 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
 public class Users {
+
+    @Transient //STUDENT: 1, TEACHER: 2, ADMIN: 4
+    String[] rolesArray = {"ROLE_STUDENT","ROLE_TEACHER","ROLE_ADMIN"};
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -64,19 +70,15 @@ public class Users {
         return encoder.matches(password, this.password);
     }
 
-    public int getRoles() {
-        return roles;
+    public ArrayList<String> getRoles() {
+        ArrayList<String> userRoles = new ArrayList<String>();
+        for(int i=0; i<this.rolesArray.length; i++){
+            if((this.roles >> i)%2==1) userRoles.add(rolesArray[i]);
+        }
+        return userRoles;
     }
 
     public void setRoles(int roles) {
         this.roles = roles;
     }
-
-    /*public List<Courses> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Courses> courses) {
-        this.courses = courses;
-    }*/
 }
