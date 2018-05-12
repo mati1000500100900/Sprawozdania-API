@@ -1,5 +1,6 @@
 package com.tokar.Contoller;
 
+import com.tokar.Entity.Message;
 import com.tokar.Entity.Users;
 import com.tokar.Entity.UsersLogin;
 import com.tokar.Repository.UsersRepository;
@@ -22,7 +23,7 @@ public class UsersController {
     UsersRepository uRepo;
 
     @PostMapping(value = "/login/json", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String jsonLogin(@RequestBody UsersLogin login) throws ServletException {
+    public Message jsonLogin(@RequestBody UsersLogin login) throws ServletException {
 
         String jwtToken = "";
         String email = login.getEmail();
@@ -45,11 +46,11 @@ public class UsersController {
         jwtToken = Jwts.builder().setSubject(email).claim("roles", user.getRoles()).setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
 
-        return jwtToken;
+        return new Message(jwtToken);
     }
 
     @PostMapping(value = "/login/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String login(@RequestParam("email") String email, @RequestParam("password") String password ) throws ServletException {
+    public Message login(@RequestParam("email") String email, @RequestParam("password") String password ) throws ServletException {
 
         String jwtToken = "";
 
@@ -70,11 +71,11 @@ public class UsersController {
         jwtToken = Jwts.builder().setSubject(email).claim("roles", user.getRoles()).setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
 
-        return jwtToken;
+        return new Message(jwtToken);
     }
 
     @PostMapping(value = "/register/json", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String jsonRegister (@RequestBody Users newuser) throws ServletException{
+    public Message jsonRegister (@RequestBody Users newuser) throws ServletException{
         if(newuser.getEmail().isEmpty() || newuser.getName().isEmpty() || newuser.getLast_name().isEmpty() || newuser.getPassword().isEmpty()){
             throw new ServletException("Empty parameters!");
         }
@@ -86,11 +87,11 @@ public class UsersController {
         newuser.setRoles(1); //student
         uRepo.save(newuser);
 
-        return "registered";
+        return new Message("registered");
     }
 
     @PostMapping(value = "/register/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String register (
+    public Message register (
             @RequestParam("email") String email,
             @RequestParam("name") String name,
             @RequestParam("last_name") String last_name,
@@ -112,6 +113,6 @@ public class UsersController {
         user.setRoles(1); //student
         uRepo.save(user);
 
-        return "registered";
+        return new Message("registered");
     }
 }

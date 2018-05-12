@@ -1,5 +1,6 @@
 package com.tokar.Contoller;
 
+import com.tokar.Entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.tokar.Entity.Users;
@@ -14,8 +15,8 @@ public class TestController {
 private UsersRepository UR;
 
     @RequestMapping("/")
-    public String greeting(@RequestParam(value = "name", defaultValue = "World") String name){
-        return "Hello "+name+"!";
+    public Message greeting(@RequestParam(value = "name", defaultValue = "World") String name){
+        return new Message("Hello "+name+"!");
     }
 
     @RequestMapping("/all")

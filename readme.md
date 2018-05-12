@@ -11,7 +11,7 @@ podajesz obiekt json
     "password": "zaq1@WSX"
 }
 ````
-zwraca plaintext "registered"
+zwraca JSON "registered"
 
 ### POST /user/login/json
 podajesz obiekt json
@@ -21,12 +21,12 @@ podajesz obiekt json
     "password": "zaq1@WSX"
 }
 ````
-zwraca plaintext token JWT 
+zwraca JSON token JWT 
 
 ### GET /all
 nic nie podajesz, tylko token JWT w headrze
 ````
 Authorization: Bearer <token>
 ````
-zwraca json z wszyskimi userami
+zwraca JSON z wszyskimi userami
 
