@@ -2,6 +2,7 @@ package com.tokar.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
@@ -21,7 +22,6 @@ public class Users {
     private String email;
     private String name;
     private String last_name;
-    @JsonIgnore
     private String password;
     private int roles;
     @OneToMany(mappedBy = "master")
@@ -56,10 +56,12 @@ public class Users {
         this.last_name = last_name;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
         this.password = encoder.encode(password);

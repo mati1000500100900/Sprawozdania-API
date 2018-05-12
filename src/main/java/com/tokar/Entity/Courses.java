@@ -2,6 +2,7 @@ package com.tokar.Entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tokar.Entity.Users;
@@ -9,6 +10,9 @@ import com.tokar.Entity.Users;
 @Entity
 public class Courses
 {
+    @Transient
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -54,16 +58,16 @@ public class Courses
         return start_time;
     }
 
-    public void setStart_time(LocalDateTime start_time) {
-        this.start_time = start_time;
+    public void setStart_time(String start_time) {
+        this.start_time = LocalDateTime.parse(start_time, this.formatter);
     }
 
     public LocalDateTime getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(LocalDateTime end_time) {
-        this.end_time = end_time;
+    public void setEnd_time(String  end_time) {
+        this.end_time = LocalDateTime.parse(end_time, this.formatter);
     }
 
     public String getAccess_key() {
