@@ -1,7 +1,7 @@
 # Sprwozdania API
 ## Logowanie i Rejestracja
 
-### POST /user/register/json
+### POST /user/register
 podajesz obiekt json
 ````
 {
@@ -13,7 +13,7 @@ podajesz obiekt json
 ````
 zwraca JSON "registered"
 
-### POST /user/login/json
+### POST /user/login
 podajesz obiekt json
 ````
 {
@@ -30,3 +30,19 @@ Authorization: Bearer <token>
 ````
 zwraca JSON z wszyskimi userami
 
+## Kursy
+
+### GET /courses
+nie podajesz nic
+zwaca JSON ze wszystkimi kursami
+
+### POST /courses
+podajesz objekt JSON
+````
+{
+    "name": "Narzędzia programistyczne",
+    "start_time": "1970-01-01 00:00",
+    "end_time": "1970-01-01 00:00"
+}
+````
+zwraca JSON "Added new course"

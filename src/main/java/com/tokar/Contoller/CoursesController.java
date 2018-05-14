@@ -1,5 +1,7 @@
 package com.tokar.Contoller;
 
+import com.tokar.DataPrototypes.CoursesPrototype;
+import com.tokar.Entity.Message;
 import com.tokar.Entity.Users;
 import com.tokar.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,34 +40,30 @@ public class CoursesController {
     return CR.findById(Long.valueOf(id));
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void insertCourse(
-            @RequestParam("name") String name,
-            @RequestParam("master_id") int master_id,
-            @RequestParam("start_time") String start_time,
-            @RequestParam("end_time") String end_time
-    ) throws ServletException{
-        if(name.isEmpty() || start_time.isEmpty() || end_time.isEmpty()){
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Message insertCourse(HttpServletRequest request, @RequestBody CoursesPrototype newCourse ) throws ServletException{
+        if(newCourse.getName()==null || newCourse.getStart_time()==null || newCourse.getEnd_time()==null){
             throw new  ServletException("Empty parameters!");
         }
-        Optional<Users> masterop = uRepo.findById(Long.valueOf(master_id));
-        if(masterop == null){
+
+        Users master = uRepo.findByEmail(request.getAttribute("subject").toString());
+        if(master == null){
             throw new ServletException("No such user");
         }
-        Users master = masterop.get();
 
         if(!master.getRoles().contains("ROLE_TEACHER")){
             throw new ServletException("Wrong permissions");
         }
 
         Courses course = new Courses();
-        course.setName(name);
-        course.setStart_time(start_time);
-        course.setEnd_time(end_time);
-        course.setAccess_key("jp2gmd2137");
+        course.setName(newCourse.getName());
+        course.setStart_time(newCourse.getStart_time());
+        course.setEnd_time(newCourse.getEnd_time());
+        course.setAccess_key();
         course.setMaster(master);
-
         CR.save(course);
+
+        return new Message("New course added");
     }
 
 }

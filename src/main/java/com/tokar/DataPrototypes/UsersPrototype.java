@@ -1,6 +1,6 @@
-package com.tokar.Entity;
+package com.tokar.DataPrototypes;
 
-public class UsersLogin {
+public class UsersPrototype {
     private String email;
     private String password;
 

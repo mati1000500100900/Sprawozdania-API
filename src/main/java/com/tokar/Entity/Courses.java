@@ -1,6 +1,7 @@
 package com.tokar.Entity;
 
 import javax.persistence.*;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,7 +18,6 @@ public class Courses
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    //private Long master_id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "master_id")
     @JsonManagedReference
@@ -46,14 +46,6 @@ public class Courses
         this.name = name;
     }
 
-    /*public Long getMaster_id() {
-        return master_id;
-    }
-
-    public void setMaster_id(Long master_id) {
-        this.master_id = master_id;
-    }*/
-
     public LocalDateTime getStart_time() {
         return start_time;
     }
@@ -74,7 +66,12 @@ public class Courses
         return access_key;
     }
 
-    public void setAccess_key(String acces_key) {
-        this.access_key = acces_key;
+    public void setAccess_key() {
+        final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        SecureRandom rnd = new SecureRandom();
+        StringBuilder sb = new StringBuilder( 16 );
+        for( int i = 0; i < 16; i++ )
+            sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+        this.access_key = sb.toString();
     }
 }

@@ -40,6 +40,7 @@ public class JwtFilter extends GenericFilterBean {
                 final Claims claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
                 request.setAttribute("claims", claims);
                 request.setAttribute("roles", claims.get("roles"));
+                request.setAttribute("subject",claims.getSubject());
             } catch (final SignatureException e) {
                 throw new ServletException("Invalid token");
             }
