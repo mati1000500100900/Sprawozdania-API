@@ -37,7 +37,7 @@ public class UsersController {
         }
 
         if (!user.checkPassword(password)) {
-            throw new ServletException("unvalid credentials");
+            throw new ServletException("invalid credentials");
         }
 
         jwtToken = Jwts.builder().setSubject(email).claim("roles", user.getRoles()).setIssuedAt(new Date())

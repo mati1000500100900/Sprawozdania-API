@@ -1,8 +1,10 @@
 package com.tokar.Contoller;
 
 import com.tokar.DataPrototypes.CoursesPrototype;
+import com.tokar.Entity.DefinedReports;
 import com.tokar.Entity.Message;
 import com.tokar.Entity.Users;
+import com.tokar.Repository.DefinedReportsRepository;
 import com.tokar.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,9 +20,12 @@ import java.util.Optional;
 @RequestMapping("/courses")
 public class CoursesController {
     @Autowired
-    private CoursesRepository CR;
+    private CoursesRepository coursesRepository;
     @Autowired
     private UsersRepository uRepo;
+    @Autowired
+    private DefinedReportsRepository definedReportsRepository;
+
 
     @GetMapping("/get")
     public String getUser(HttpServletRequest request){
@@ -32,12 +37,12 @@ public class CoursesController {
 
     @GetMapping
     public Iterable<Courses> GetAll(){
-    return CR.findAll();
+    return coursesRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public Optional<Courses> getCourse(@PathVariable("id") int id){
-    return CR.findById(Long.valueOf(id));
+    return coursesRepository.findById(Long.valueOf(id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -61,13 +66,13 @@ public class CoursesController {
         course.setEnd_time(newCourse.getEnd_time());
         course.setAccess_key();
         course.setMaster(master);
-        CR.save(course);
+        coursesRepository.save(course);
 
         return new Message("new course added");
     }
     @PatchMapping("/{id}")
     public Message updateCourse(HttpServletRequest request, @RequestBody CoursesPrototype newCourse, @PathVariable("id") Long id ) throws ServletException{
-        Optional<Courses> oldCourse = CR.findById(id);
+        Optional<Courses> oldCourse = coursesRepository.findById(id);
         if(!oldCourse.isPresent()){
             throw new ServletException("no such course");
         }
@@ -78,8 +83,19 @@ public class CoursesController {
         if(newCourse.getName()!=null) oldCourse2.setName(newCourse.getName());
         if(newCourse.getStart_time()!=null) oldCourse2.setStart_time(newCourse.getStart_time());
         if(newCourse.getEnd_time()!=null) oldCourse2.setEnd_time(newCourse.getEnd_time());
-        CR.save(oldCourse2);
+        coursesRepository.save(oldCourse2);
         return new Message("updated");
+    }
+
+    @GetMapping("/definitions")
+    public Iterable<DefinedReports> getDefinedReports(){
+        return definedReportsRepository.findAll();
+    }
+
+    @PostMapping(value = "/definitions", consumes = MediaType.APPLICATION_JSON_VALUE)
+    private DefinedReports addDefinedReports(HttpServletRequest request, @RequestBody DefinedReports newDefinition) throws ServletException{
+        definedReportsRepository.save(newDefinition);
+        return newDefinition;
     }
 
 }

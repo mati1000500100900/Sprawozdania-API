@@ -4,9 +4,12 @@ import javax.persistence.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tokar.Entity.Users;
+import org.springframework.data.repository.cdi.Eager;
 
 @Entity
 public class Courses
@@ -25,6 +28,9 @@ public class Courses
     private LocalDateTime start_time;
     private LocalDateTime end_time;
     private String access_key;
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<DefinedReports> definedReports;
 
     public Users getMaster() {
         return master;
