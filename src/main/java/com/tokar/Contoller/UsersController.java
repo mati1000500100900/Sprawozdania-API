@@ -27,17 +27,17 @@ public class UsersController {
         String password = login.getPassword();
 
         if (email.isEmpty() || password.isEmpty()) {
-            throw new ServletException("Please fill in username and password");
+            throw new ServletException("please fill in username and password");
         }
 
         Users user = uRepo.findByEmail(email);
 
         if (user == null) {
-            throw new ServletException("User email not found.");
+            throw new ServletException("user email not found.");
         }
 
         if (!user.checkPassword(password)) {
-            throw new ServletException("Invalid login. Please check your name and password.");
+            throw new ServletException("unvalid credentials");
         }
 
         jwtToken = Jwts.builder().setSubject(email).claim("roles", user.getRoles()).setIssuedAt(new Date())
@@ -49,11 +49,11 @@ public class UsersController {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Message jsonRegister (@RequestBody Users newuser) throws ServletException{
         if(newuser.getEmail().isEmpty() || newuser.getName().isEmpty() || newuser.getLast_name().isEmpty() || newuser.getPassword().isEmpty()){
-            throw new ServletException("Empty parameters!");
+            throw new ServletException("empty parameterse");
         }
         Users user = uRepo.findByEmail(newuser.getEmail());
         if (user != null) {
-            throw new ServletException("Email already in use");
+            throw new ServletException("email already used");
         }
 
         newuser.setRoles(1); //student

@@ -43,16 +43,16 @@ public class CoursesController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Message insertCourse(HttpServletRequest request, @RequestBody CoursesPrototype newCourse ) throws ServletException{
         if(newCourse.getName()==null || newCourse.getStart_time()==null || newCourse.getEnd_time()==null){
-            throw new  ServletException("Empty parameters!");
+            throw new  ServletException("empty parameters");
         }
 
         Users master = uRepo.findByEmail(request.getAttribute("subject").toString());
         if(master == null){
-            throw new ServletException("No such user");
+            throw new ServletException("no such user");
         }
 
         if(!master.getRoles().contains("ROLE_TEACHER")){
-            throw new ServletException("Wrong permissions");
+            throw new ServletException("wrong permissions");
         }
 
         Courses course = new Courses();
@@ -63,7 +63,23 @@ public class CoursesController {
         course.setMaster(master);
         CR.save(course);
 
-        return new Message("New course added");
+        return new Message("new course added");
+    }
+    @PatchMapping("/{id}")
+    public Message updateCourse(HttpServletRequest request, @RequestBody CoursesPrototype newCourse, @PathVariable("id") Long id ) throws ServletException{
+        Optional<Courses> oldCourse = CR.findById(id);
+        if(!oldCourse.isPresent()){
+            throw new ServletException("no such course");
+        }
+        Courses oldCourse2 = oldCourse.get();
+        if(!oldCourse2.getMaster().getEmail().equals(request.getAttribute("subject").toString())){
+            throw new ServletException("cannot change not your course");
+        }
+        if(newCourse.getName()!=null) oldCourse2.setName(newCourse.getName());
+        if(newCourse.getStart_time()!=null) oldCourse2.setStart_time(newCourse.getStart_time());
+        if(newCourse.getEnd_time()!=null) oldCourse2.setEnd_time(newCourse.getEnd_time());
+        CR.save(oldCourse2);
+        return new Message("updated");
     }
 
 }
