@@ -61,7 +61,7 @@ podajesz id w URI i JSON ze zmianami
     "name": "Nowa nazwa"
 }
 ````
-zwraca JSON Updated
+zwraca JSON "updated'
 
 #### DELETE /courses/{id}
 podajesz w URI id kursu do usnięcia
@@ -69,19 +69,14 @@ podajesz w URI id kursu do usnięcia
 zwraca JSON "deleted"
 
 #### POST /courses/join/{access_key}
-podajesz w uri {access_key} kursu,
-musisz podać token usera z rolą student
-
-zwraza JSON "added"
-
-#### POST /courses/join/{access_key}
 podajesz {access_key} kursu do którego chcesz dołączyć,
-zwraca JSON joined
+zwraca JSON "joined"
 
 ### Definicje sprawozdań
 
 #### GET /courses/definitions 
 nie podajesz nic
+
 zwraca JSON ze wszystkimi definicjami
 
 #### POST /courses/definitions
