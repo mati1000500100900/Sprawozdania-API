@@ -14,7 +14,7 @@ public class Main {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new JwtFilter());
         registrationBean.addUrlPatterns("/courses/*");
-        registrationBean.addUrlPatterns("/all");
+        registrationBean.addUrlPatterns("/whoami");
         return registrationBean;
     }
     public static void main(String args[]){

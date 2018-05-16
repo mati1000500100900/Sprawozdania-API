@@ -5,11 +5,11 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.tokar.Entity.Users;
-import org.springframework.data.repository.cdi.Eager;
+import com.tokar.DataPrototypes.CoursesPrototype;
 
 @Entity
 public class Courses
@@ -27,10 +27,30 @@ public class Courses
     private Users master;
     private LocalDateTime start_time;
     private LocalDateTime end_time;
-    private String access_key;
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    @Column(name = "access_key")
+    private String accesskey;
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<DefinedReports> definedReports;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "course_users", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @JsonBackReference
+    private Set<Users> students;
+
+    public Courses(){}
+
+    public Courses(CoursesPrototype proto){
+        this.name=proto.getName();
+        this.setStart_time(proto.getStart_time());
+        this.setEnd_time(proto.getEnd_time());
+        this.setAccess_key();
+    }
+    @Transient
+    public void updateCourse(CoursesPrototype proto){
+        if(proto.getName()!=null) this.setName(proto.getName());
+        if(proto.getStart_time()!=null) this.setStart_time(proto.getStart_time());
+        if(proto.getEnd_time()!=null) this.setEnd_time(proto.getEnd_time());
+    }
 
     public Users getMaster() {
         return master;
@@ -69,7 +89,7 @@ public class Courses
     }
 
     public String getAccess_key() {
-        return access_key;
+        return accesskey;
     }
 
     public void setAccess_key() {
@@ -78,6 +98,31 @@ public class Courses
         StringBuilder sb = new StringBuilder( 16 );
         for( int i = 0; i < 16; i++ )
             sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
-        this.access_key = sb.toString();
+        this.accesskey = sb.toString();
     }
+
+    public List<DefinedReports> getDefinedReports() {
+        return definedReports;
+    }
+
+    public void setDefinedReports(List<DefinedReports> definedReports) {
+        this.definedReports = definedReports;
+    }
+
+    public Set<Users> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Users> students) {
+        this.students = students;
+    }
+
+    public void addStudentToSet(Users student){
+        this.students.add(student);
+    }
+
+    public void deleteStudentFromSet(Users student){
+        this.students.remove(student);
+    }
+
 }

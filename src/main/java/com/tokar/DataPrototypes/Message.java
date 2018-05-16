@@ -1,4 +1,4 @@
-package com.tokar.Entity;
+package com.tokar.DataPrototypes;
 
 public class Message {
     private String message;

@@ -1,7 +1,8 @@
 # Sprwozdania API
-## Logowanie i Rejestracja
 
-### POST /user/register
+### Logowanie i Rejestracja
+
+#### POST /user/register
 podajesz obiekt json
 ````
 {
@@ -13,7 +14,7 @@ podajesz obiekt json
 ````
 zwraca JSON "registered"
 
-### POST /user/login
+#### POST /user/login
 podajesz obiekt json
 ````
 {
@@ -23,24 +24,26 @@ podajesz obiekt json
 ````
 zwraca JSON token JWT 
 
-### GET /all
+#### GET /whoami
 nic nie podajesz, tylko token JWT w headrze
 ````
 Authorization: Bearer <token>
 ````
-zwraca JSON z wszyskimi userami
+zwraca JSON z danymi zalogowanego usera
 
-## Kursy
+### Kursy
 
-### GET /courses
+#### GET /courses
 nie podajesz nic
+
 zwaca JSON ze wszystkimi kursami
 
-### GET /courses/{id}
-nie podajesz nic, poza id w URI
+#### GET /courses/{id}
+podajesz {id} w URI
+
 zwaca JSON z jednym kursem
 
-### POST /courses
+#### POST /courses
 podajesz objekt JSON
 ````
 {
@@ -51,7 +54,7 @@ podajesz objekt JSON
 ````
 zwraca JSON "Added new course"
 
-### PATCH /courses/{id}
+#### PATCH /courses/{id}
 podajesz id w URI i JSON ze zmianami
 ````
 {
@@ -60,6 +63,56 @@ podajesz id w URI i JSON ze zmianami
 ````
 zwraca JSON Updated
 
+#### DELETE /courses/{id}
+podajesz w URI id kursu do usnięcia
+
+zwraca JSON "deleted"
+
+#### POST /courses/join/{access_key}
+podajesz w uri {access_key} kursu,
+musisz podać token usera z rolą student
+
+zwraza JSON "added"
+
+#### POST /courses/join/{access_key}
+podajesz {access_key} kursu do którego chcesz dołączyć,
+zwraca JSON joined
+
+### Definicje sprawozdań
+
+#### GET /courses/definitions 
+nie podajesz nic
+zwraca JSON ze wszystkimi definicjami
+
+#### POST /courses/definitions
+podajesz JSON z nową definicją, możesz dodawać tylko z rolą TEACHER, tylko do swoich kursów
+````
+{
+    "title": "Obsługa GIT-a",
+    "start_time": "1970-01-01 00:00",
+    "end_time": "1970-01-01 23:59"
+}
+````
+zwraca JSON "added"
+
+#### GET /courses/definitions/{id} 
+podajesz w URI {id} definicji
+
+zwraca JSON z tą definicją
+
+#### PATCH /courses/definitions/{id} 
+podajesz JSON z tym co chcesz zmienić i {id} definicji w URI, jak przy dodawaniu można edytować tyko swoje definicje
+````
+{
+    "start_time": "1970-01-01 04:20",
+}
+````
+zwraca JSON "updated"
+
+#### DELETE /courses/definitions/{id} 
+podajesz {id} definicji w URI, możesz usuwać tylko swoje definicje
+
+zwraca JSON "deleted"
 
 ## P.S. wszystkie daty podajemy w formacie
 ````

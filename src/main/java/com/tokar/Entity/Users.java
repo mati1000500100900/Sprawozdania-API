@@ -3,12 +3,13 @@ package com.tokar.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tokar.DataPrototypes.UsersPrototype;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Users {
@@ -25,8 +26,22 @@ public class Users {
     private String password;
     private int roles;
     @OneToMany(mappedBy = "master")
-    //@JsonBackReference
-    //private List<Courses> courses;
+    @JsonBackReference
+    private List<Courses> courses;
+    @ManyToMany(mappedBy = "students")
+    @JsonBackReference
+    private Set<Courses> coursesSet;
+
+
+    public Users(){}
+
+    public Users(UsersPrototype proto){
+        this.email=proto.getEmail();
+        this.name=proto.getName();
+        this.last_name=proto.getLast_name();
+        this.setPassword(proto.getPassword());
+        this.setRoles(1);
+    }
 
     public Long getId() {
         return id;
@@ -82,5 +97,21 @@ public class Users {
 
     public void setRoles(int roles) {
         this.roles = roles;
+    }
+
+    public Set<Courses> getCoursesSet() {
+        return coursesSet;
+    }
+
+    public void setCoursesSet(Set<Courses> coursesSet) {
+        this.coursesSet = coursesSet;
+    }
+
+    public void addCourseToSet(Courses course){
+        this.courses.add(course);
+    }
+
+    public void deleteCourseFromSet(Courses course){
+        this.courses.remove(course);
     }
 }
