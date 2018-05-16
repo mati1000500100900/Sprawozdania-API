@@ -72,6 +72,11 @@ zwraca JSON "deleted"
 podajesz {access_key} kursu do którego chcesz dołączyć,
 zwraca JSON "joined"
 
+#### GET /courses/my
+nic nie podajesz 
+         
+zwraca JSON z kursami zalogowanego usera
+
 ### Definicje sprawozdań
 
 #### GET /courses/definitions 
@@ -83,12 +88,18 @@ zwraca JSON ze wszystkimi definicjami
 podajesz JSON z nową definicją, możesz dodawać tylko z rolą TEACHER, tylko do swoich kursów
 ````
 {
+    "course_id": 2,
     "title": "Obsługa GIT-a",
     "start_time": "1970-01-01 00:00",
     "end_time": "1970-01-01 23:59"
 }
 ````
 zwraca JSON "added"
+
+#### GET /courses/{id}/definitions 
+podajesz w URI {id} kursu
+
+zwraca JSON ze wszystkimi definicjami tego kursu
 
 #### GET /courses/definitions/{id} 
 podajesz w URI {id} definicji
