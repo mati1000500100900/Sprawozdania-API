@@ -13,12 +13,6 @@ public class TestController {
 @Autowired
 private UsersRepository userRepo;
 
-
-    @RequestMapping("/whoami")
-    public Users getUser(HttpServletRequest request) {
-        return userRepo.findByEmail(request.getAttribute("subject").toString());
-    }
-
     @GetMapping("/mail/{mail}")
     public Users bymail(@PathVariable("mail") String mail){
         return userRepo.findByEmail(mail);

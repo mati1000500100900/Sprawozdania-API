@@ -11,13 +11,15 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/user")
 public class UsersController {
     @Autowired
-    UsersRepository uRepo;
+    UsersRepository userRepo;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Message jsonLogin(@RequestBody UsersPrototype login) throws ServletException {
@@ -30,7 +32,7 @@ public class UsersController {
             throw new ServletException("please fill in username and password");
         }
 
-        Users user = uRepo.findByEmail(email);
+        Users user = userRepo.findByEmail(email);
 
         if (user == null) {
             throw new ServletException("invalid credentials");
@@ -51,16 +53,21 @@ public class UsersController {
         if(newUser.getEmail()==null || newUser.getName()==null || newUser.getLast_name()==null || newUser.getPassword()==null){
             throw new ServletException("empty parameters");
         }
-        if(newUser.getEmail().indexOf("@utp.edu.pl")==-1){
+        if(!Pattern.matches("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@utp.edu.pl$",newUser.getEmail())){
             throw new ServletException("only @utp.edu.pl mail domain is supported");
         }
-        Users user = uRepo.findByEmail(newUser.getEmail());
+        Users user = userRepo.findByEmail(newUser.getEmail());
         if (user != null) {
             throw new ServletException("email already used");
         }
         user = new Users(newUser);
-        uRepo.save(user);
+        userRepo.save(user);
 
         return new Message("registered");
+    }
+
+    @RequestMapping("/whoami")
+    public Users getUser(HttpServletRequest request) {
+        return userRepo.findByEmail(request.getAttribute("subject").toString());
     }
 }

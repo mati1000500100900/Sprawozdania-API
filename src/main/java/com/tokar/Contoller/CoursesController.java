@@ -5,7 +5,6 @@ import com.tokar.DataPrototypes.DefinedReportsPrototype;
 import com.tokar.Entity.DefinedReports;
 import com.tokar.DataPrototypes.Message;
 import com.tokar.Entity.Users;
-import com.tokar.Repository.DefinedReportsRepository;
 import com.tokar.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,9 +25,6 @@ public class CoursesController {
     private CoursesRepository coursesRepo;
     @Autowired
     private UsersRepository usersRepo;
-    @Autowired
-    private DefinedReportsRepository definedReportsRepo;
-
 
     @GetMapping
     public Iterable<Courses> GetAll(){
@@ -134,65 +130,4 @@ public class CoursesController {
         coursesRepo.save(course);
         return new Message("joined");
     }
-
-    @GetMapping("/definitions")
-    public Iterable<DefinedReports> getDefinedReports(){
-        return definedReportsRepo.findAll();
-    }
-
-    @PostMapping(value = "/definitions", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Message addDefinedReports(HttpServletRequest request, @RequestBody DefinedReportsPrototype newDefinition) throws ServletException{
-        if(newDefinition.getTitle()==null || newDefinition.getStart_time()==null || newDefinition.getEnd_time()==null || newDefinition.getCourse_id()==null){
-            throw new ServletException("empty parameters");
-        }
-        Optional<Courses> opcourse = coursesRepo.findById(newDefinition.getCourse_id());
-        if(!opcourse.isPresent()){
-            throw new ServletException("no such course");
-        }
-        Courses course = opcourse.get();
-        if(!course.getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cant add new definition to not your course");
-        }
-
-        DefinedReports definedReport = new DefinedReports(newDefinition);
-        definedReport.setCourse(course);
-
-        definedReportsRepo.save(definedReport);
-        return new Message("definition added");
-    }
-
-    @GetMapping("/definitions/{id}")
-    public Optional<DefinedReports> getOneDefinition(@PathVariable("id") Long id){
-        return definedReportsRepo.findById(id);
-    }
-
-    @PatchMapping("/definitions/{id}")
-    public Message updateDefinition (HttpServletRequest request, @RequestBody DefinedReportsPrototype newDefinition, @PathVariable("id") Long id) throws ServletException{
-        Optional<DefinedReports> opDefinition = definedReportsRepo.findById(id);
-        if(!opDefinition.isPresent()){
-            throw new ServletException("no such definition");
-        }
-        DefinedReports definition = opDefinition.get();
-        if(!definition.getCourse().getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cant update not your definition");
-        }
-        definition.updateDefinition(newDefinition);
-        definedReportsRepo.save(definition);
-        return new Message("updated");
-    }
-
-    @DeleteMapping("/definitions/{id}")
-    public Message DeleteDefinition(HttpServletRequest request,@PathVariable("id") Long id) throws ServletException{
-        Optional<DefinedReports> opDefinition = definedReportsRepo.findById(id);
-        if(!opDefinition.isPresent()){
-            throw new ServletException("no such definition");
-        }
-        DefinedReports definition = opDefinition.get();
-        if(!definition.getCourse().getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cant delete not your definition");
-        }
-        definedReportsRepo.delete(definition);
-        return new Message("deleted");
-    }
-
 }
