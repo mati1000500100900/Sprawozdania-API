@@ -38,14 +38,14 @@ public class DefinitionsController {
         }
         Courses course = opcourse.get();
         if(!course.getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cant add new definition to not your course");
+            throw new ServletException("not yours");
         }
 
         DefinedReports definedReport = new DefinedReports(newDefinition);
         definedReport.setCourse(course);
 
         definedReportsRepo.save(definedReport);
-        return new Message("definition added");
+        return new Message("added");
     }
 
     @GetMapping("/{id}")
@@ -61,7 +61,7 @@ public class DefinitionsController {
         }
         DefinedReports definition = opDefinition.get();
         if(!definition.getCourse().getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cant update not your definition");
+            throw new ServletException("not yours");
         }
         definition.updateDefinition(newDefinition);
         definedReportsRepo.save(definition);
@@ -76,7 +76,7 @@ public class DefinitionsController {
         }
         DefinedReports definition = opDefinition.get();
         if(!definition.getCourse().getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cant delete not your definition");
+            throw new ServletException("not yours");
         }
         definedReportsRepo.delete(definition);
         return new Message("deleted");

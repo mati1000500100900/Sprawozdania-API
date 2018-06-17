@@ -29,7 +29,7 @@ public class UsersController {
         String password = login.getPassword();
 
         if (email.isEmpty() || password.isEmpty()) {
-            throw new ServletException("please fill in username and password");
+            throw new ServletException("empty parameters");
         }
 
         Users user = userRepo.findByEmail(email);
@@ -43,7 +43,7 @@ public class UsersController {
         }
 
         jwtToken = Jwts.builder().setSubject(email).claim("roles", user.getRoles()).setIssuedAt(new Date())
-                .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
+                .signWith(SignatureAlgorithm.HS256, "c6208ec4cda9cdc4850310281c4703df").compact();
 
         return new Message(jwtToken);
     }
@@ -54,7 +54,7 @@ public class UsersController {
             throw new ServletException("empty parameters");
         }
         if(!Pattern.matches("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@utp.edu.pl$",newUser.getEmail())){
-            throw new ServletException("only @utp.edu.pl mail domain is supported");
+            throw new ServletException("wrong domain");
         }
         Users user = userRepo.findByEmail(newUser.getEmail());
         if (user != null) {

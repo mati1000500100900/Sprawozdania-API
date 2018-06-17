@@ -44,7 +44,7 @@ public class CoursesController {
         }
         Courses course = opCourse.get();
         if(!course.getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cant delete not your course");
+            throw new ServletException("not yours");
         }
         coursesRepo.delete(course);
         return new Message("deleted");
@@ -70,7 +70,7 @@ public class CoursesController {
         course.setMaster(master);
         coursesRepo.save(course);
 
-        return new Message("new course added");
+        return new Message("added");
     }
     @PatchMapping("/{id}")
     public Message updateCourse(HttpServletRequest request, @RequestBody CoursesPrototype newCourse, @PathVariable("id") Long id ) throws ServletException{
@@ -80,7 +80,7 @@ public class CoursesController {
         }
         Courses oldCourse2 = oldCourse.get();
         if(!oldCourse2.getMaster().getEmail().equals(request.getAttribute("subject").toString())){
-            throw new ServletException("cannot change not your course");
+            throw new ServletException("not yours");
         }
         oldCourse2.updateCourse(newCourse);
         coursesRepo.save(oldCourse2);
@@ -91,7 +91,7 @@ public class CoursesController {
     public Set<Users> getCourseUsers(@PathVariable("id") Long id) throws ServletException{
         Optional<Courses> opCourse = coursesRepo.findById(id);
         if(!opCourse.isPresent()){
-            throw new ServletException("No such course");
+            throw new ServletException("no such course");
         }
         Courses course = opCourse.get();
         return course.getStudents();
@@ -102,7 +102,7 @@ public class CoursesController {
     public List<DefinedReports> getCourseDefinitions(@PathVariable("id") Long id) throws ServletException{
         Optional<Courses> opCourse = coursesRepo.findById(id);
         if(!opCourse.isPresent()){
-            throw new ServletException("No such course");
+            throw new ServletException("no such course");
         }
         Courses course = opCourse.get();
         return course.getDefinedReports();
@@ -123,7 +123,7 @@ public class CoursesController {
         }
         Users user = usersRepo.findByEmail(request.getAttribute("subject").toString());
         if(!user.getRoles().contains("ROLE_STUDENT")){
-            throw new ServletException("only students can be signed to course");
+            throw new ServletException("only for students");
         }
         Courses course = opCourse.get();
         course.addStudentToSet(user);
