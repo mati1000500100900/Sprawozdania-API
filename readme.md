@@ -24,7 +24,7 @@ podajesz obiekt json
 ````
 zwraca JSON token JWT 
 
-#### GET /whoami
+#### GET /user/whoami
 nic nie podajesz, tylko token JWT w headrze
 ````
 Authorization: Bearer <token>
