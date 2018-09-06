@@ -4,23 +4,32 @@ import com.tokar.DataPrototypes.DefinedReportsPrototype;
 import com.tokar.DataPrototypes.Message;
 import com.tokar.Entity.Courses;
 import com.tokar.Entity.DefinedReports;
+import com.tokar.Entity.Users;
 import com.tokar.Repository.CoursesRepository;
 import com.tokar.Repository.DefinedReportsRepository;
+import com.tokar.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/courses/definitions")
 public class DefinitionsController {
+    private final CoursesRepository coursesRepo;
+    private final DefinedReportsRepository definedReportsRepo;
+    private final UsersRepository usersRepo;
+
     @Autowired
-    private CoursesRepository coursesRepo;
-    @Autowired
-    private DefinedReportsRepository definedReportsRepo;
+    public DefinitionsController(CoursesRepository coursesRepo, DefinedReportsRepository definedReportsRepo, UsersRepository usersRepo) {
+        this.coursesRepo = coursesRepo;
+        this.definedReportsRepo = definedReportsRepo;
+        this.usersRepo = usersRepo;
+    }
 
     @GetMapping("/")
     public Iterable<DefinedReports> getDefinedReports(){
@@ -80,5 +89,15 @@ public class DefinitionsController {
         }
         definedReportsRepo.delete(definition);
         return new Message("deleted");
+    }
+    @GetMapping("/my")
+    public Iterable<DefinedReports> myDefinitions(HttpServletRequest request){
+        Users user = usersRepo.findByEmail(request.getAttribute("subject").toString());
+        Iterable<Courses> myCourses = user.getCoursesSet();
+        ArrayList<DefinedReports> myDefinedReports = new ArrayList<>();
+        for (Courses course:myCourses) {
+            myDefinedReports.addAll(course.getDefinedReports());
+        }
+        return myDefinedReports;
     }
 }
