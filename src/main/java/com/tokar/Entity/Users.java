@@ -15,7 +15,7 @@ import java.util.Set;
 public class Users {
 
     @Transient //STUDENT: 1, TEACHER: 2, ADMIN: 4
-    String[] rolesArray = {"ROLE_STUDENT","ROLE_TEACHER","ROLE_ADMIN"};
+    private String[] rolesArray = {"ROLE_STUDENT","ROLE_TEACHER","ROLE_ADMIN"};
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,6 @@ public class Users {
         this.name=proto.getName();
         this.last_name=proto.getLast_name();
         this.setPassword(proto.getPassword());
-        this.setRoles(1);
     }
 
     public Long getId() {
@@ -88,7 +87,7 @@ public class Users {
     }
 
     public ArrayList<String> getRoles() {
-        ArrayList<String> userRoles = new ArrayList<String>();
+        ArrayList<String> userRoles = new ArrayList<>();
         for(int i=0; i<this.rolesArray.length; i++){
             if((this.roles >> i)%2==1) userRoles.add(rolesArray[i]);
         }

@@ -18,8 +18,13 @@ import java.util.regex.Pattern;
 @RestController
 @RequestMapping("/user")
 public class UsersController {
-    @Autowired
+    final
     UsersRepository userRepo;
+
+    @Autowired
+    public UsersController(UsersRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Message jsonLogin(@RequestBody UsersPrototype login) throws ServletException {
@@ -61,6 +66,11 @@ public class UsersController {
             throw new ServletException("email already used");
         }
         user = new Users(newUser);
+        if(Pattern.matches("^[a-zA-Z]{6}[0-9]{3}.+", newUser.getEmail())){
+            user.setRoles(1);
+        }
+        else user.setRoles(2);
+
         userRepo.save(user);
 
         return new Message("registered");

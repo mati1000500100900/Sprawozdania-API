@@ -1,7 +1,6 @@
 package com.tokar.Contoller;
 
 import com.tokar.DataPrototypes.CoursesPrototype;
-import com.tokar.DataPrototypes.DefinedReportsPrototype;
 import com.tokar.Entity.DefinedReports;
 import com.tokar.DataPrototypes.Message;
 import com.tokar.Entity.Users;
@@ -21,10 +20,14 @@ import java.util.Set;
 @RestController
 @RequestMapping("/courses")
 public class CoursesController {
+    private final CoursesRepository coursesRepo;
+    private final UsersRepository usersRepo;
+
     @Autowired
-    private CoursesRepository coursesRepo;
-    @Autowired
-    private UsersRepository usersRepo;
+    public CoursesController(CoursesRepository coursesRepo, UsersRepository usersRepo) {
+        this.coursesRepo = coursesRepo;
+        this.usersRepo = usersRepo;
+    }
 
     @GetMapping
     public Iterable<Courses> GetAll(){
@@ -32,8 +35,8 @@ public class CoursesController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Courses> getCourse(@PathVariable("id") int id){
-    return coursesRepo.findById(Long.valueOf(id));
+    public Optional<Courses> getCourse(@PathVariable("id") Long id){
+    return coursesRepo.findById(id);
     }
 
     @DeleteMapping("{id}")
@@ -49,7 +52,6 @@ public class CoursesController {
         coursesRepo.delete(course);
         return new Message("deleted");
     }
-
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Message insertCourse(HttpServletRequest request, @RequestBody CoursesPrototype newCourse ) throws ServletException{
@@ -110,7 +112,7 @@ public class CoursesController {
     }
 
     @GetMapping("/my")
-    public Iterable<Courses> getMyCourses(HttpServletRequest request) throws ServletException{
+    public Iterable<Courses> getMyCourses(HttpServletRequest request){
         Users user = usersRepo.findByEmail(request.getAttribute("subject").toString());
         return user.getCoursesSet();
     }

@@ -120,6 +120,22 @@ podajesz {id} definicji w URI, możesz usuwać tylko swoje definicje
 
 zwraca JSON "deleted"
 
+#### GET /courses/definitions/my
+podajesz token, zwraca definicje sprawozdań do oddania dla usera 
+
+#### GET /teacher/courses
+podajesz token i jeśli masz role teacher to zwraca kursy utworzone przez niego
+
+#### GET /teacher/mystudents
+podajesz token i jeśli masz role teacher to zwraca uczestników jego kursów
+(po uczestków jednego kursu patrz /courses/{id}/students)
+
+#### GET /teacher/kickstudent/{id_kursu}/{id_studenta}
+nie powinno być GETEM ale i tak wszystko podajesz w uri + token 
+zwraca 'kicked' albo błąd
+
+#
+
 ## P.S. wszystkie daty podajemy w formacie
 ````
     yyyy-MM-dd HH:mm
